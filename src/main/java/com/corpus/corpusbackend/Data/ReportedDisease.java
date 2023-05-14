@@ -17,5 +17,13 @@ public class ReportedDisease {
         this.date = date;
     }
 
-
+    @Override
+    public String toString() {
+        return "ReportedDisease{" +
+                "location=" + location +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

@@ -31,7 +31,7 @@ public class Map {
      * Add a report to the database
      */
     public void sendReport(ReportedDisease report){
-        int cell_x = (int)((report.location.latitude+180) / cell_size);
+        int cell_x = (int)((report.location.longitude+180) / cell_size);
         int cell_y = (int)((report.location.latitude+180) / cell_size);
 
         if(cells[cell_x][cell_y] == null) {
@@ -50,6 +50,7 @@ public class Map {
         ArrayList<ReportedDisease> collected_reports = new ArrayList<>();
             for (Point active_cell:active_cells) {
                 Location approx_cell_location = new Location(active_cell.x * cell_size - 180, active_cell.y * cell_size - 180);
+                distance += new Location(0,0).distance(new Location(0,cell_size)) * 2; //Add cell width in KM to distance
                 if(approx_cell_location.distance(location) < distance){
                     collected_reports.addAll(cells[active_cell.x][active_cell.y]);
                 }

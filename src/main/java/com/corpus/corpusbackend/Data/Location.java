@@ -30,4 +30,12 @@ public class Location {
         return 2*earth_radius * Math.asin(Math.sqrt(Math.sin((theta_2 - theta_1)/2.0)*Math.sin((theta_2 - theta_1)/2.0) + Math.cos(theta_1) * Math.cos(theta_2) * Math.sin((gamma_2 - gamma_1)/2.0)*Math.sin((gamma_2 - gamma_1)/2.0)));
 
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
+                '}';
+    }
 }

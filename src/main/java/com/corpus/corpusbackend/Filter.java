@@ -8,6 +8,6 @@ import java.util.ArrayList;
 
 public class Filter {
     public static ReportedDisease filter(ArrayList<ReportedDisease> nearby, Date date, Location user_location ){
-
+return null;
     }
 }

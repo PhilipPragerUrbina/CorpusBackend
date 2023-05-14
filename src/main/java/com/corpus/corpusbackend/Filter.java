@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class Filter {
     public static ReportedDisease filter(ArrayList<ReportedDisease> nearby, Date date, Location user_location ){
-return null;
+        //get diseases within spreading range and timeframe
+        //get the top reported ones
+        return null;
     }
 }

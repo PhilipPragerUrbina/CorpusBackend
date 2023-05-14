@@ -8,9 +8,14 @@ public class ReportedDisease {
     public String name;
     public String description;
 
-    public ReportedDisease(Location location, String name, String description) {
+    public Date date;
+
+    public ReportedDisease(Location location, String name, String description, Date date) {
         this.location = location;
         this.name = name;
         this.description = description;
+        this.date = date;
     }
+
+
 }

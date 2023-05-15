@@ -4,12 +4,12 @@ import com.corpus.corpusbackend.Data.Date;
 import com.corpus.corpusbackend.Data.Location;
 import com.corpus.corpusbackend.Data.Map;
 import com.corpus.corpusbackend.Data.ReportedDisease;
-import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
+import jakarta.json.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+import java.io.StringReader;
 import java.util.ArrayList;
 
 @Path("/map")
@@ -20,7 +20,7 @@ public class MapResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getDiseases(@QueryParam("latitude") String latitude, @QueryParam("longitude") String longitude,@QueryParam("date") int date) {
+    public Response getDiseases(@QueryParam("latitude") String latitude, @QueryParam("longitude") String longitude,@QueryParam("date") int date) {
         Location location = new Location(Double.parseDouble(longitude),Double.parseDouble(latitude));
         ArrayList<String> results = Filter.filter(map.getRegion(location,1000),new Date(date),location);
         JsonObjectBuilder out = Json.createObjectBuilder();
@@ -41,15 +41,25 @@ public class MapResource {
         }
         out.add("relevant_results", array.build());
         out.add("area", array2.build());
-        return out.build();
+        return Response
+                .status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Max-Age", "1209600")
+                .entity(out.build())
+                .build();
     }
 
 
     //expects json with "date":days since last epoch(int), "name" : name of disease, "longitude", "latitude" : location in degrees(string)
     @POST
     @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String submitReport(JsonObject json) {
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response submitReport(String json_str) {
+        JsonReader builder = Json.createReader(new StringReader(json_str));
+        JsonObject json = builder.read().asJsonObject();
 
         try {
             count_since_last_flush++;
@@ -58,9 +68,25 @@ public class MapResource {
             }
             ReportedDisease disease = new ReportedDisease(new Location(Double.parseDouble(json.getString("longitude")),Double.parseDouble(json.getString("latitude"))),json.getString("name") ,"", new Date(json.getInt("date")));
             map.sendReport( disease);
-            return "success, added " + disease + count_since_last_flush;
+            return Response
+                    .status(200)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .header("Access-Control-Max-Age", "1209600")
+                    .entity("success, added " + disease + count_since_last_flush)
+                    .build();
         } catch (Exception e){
-            return e.getMessage();
+            return Response
+                    .status(200)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .header("Access-Control-Max-Age", "1209600")
+                    .entity(e.getMessage())
+                    .build();
         }
 
     }

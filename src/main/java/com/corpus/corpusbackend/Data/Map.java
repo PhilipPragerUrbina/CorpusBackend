@@ -23,6 +23,8 @@ public class Map {
         final int max = 360;
         int cell_count = max/cell_size;
         cells = new ArrayList[cell_count][cell_count];
+
+
     }
 
     //todo serialize and store backup
